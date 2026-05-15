@@ -1,0 +1,47 @@
+{
+  "model": {
+    "timeemb": 128,
+    "featureemb": 16,
+    "is_unconditional": false,
+    "target_strategy": "random",
+    "timestamp_emb_dim": 32
+  },
+  "diffusion": {
+    "num_steps": 50,
+    "beta_start": 0.0001,
+    "beta_end": 0.5,
+    "schedule": "quad",
+    
+    "_comment_dual_scale": "🔥 双尺度时间步配置 (来自 DiffusionAD)",
+    "use_dual_scale": true,
+    "dual_scale_strategy": "snr_adaptive",
+    "condition_w": 1.0,
+    
+    "_comment_strategies": {
+      "snr_adaptive": "基于信噪比的自适应采样 - 根据alpha值自动选择时间步",
+      "fixed_gap": "固定间距采样 - 简单但不够灵活",
+      "layered": "分层采样 - 多层次覆盖噪声空间"
+    },
+    
+    "_comment_snr_adaptive": {
+      "description": "根据信噪比(SNR)自动选择两个时间步",
+      "low_snr_percentile": "低噪声区间的百分位数 (0.2 = 前20%低噪声)",
+      "high_snr_percentile": "高噪声区间的百分位数 (0.8 = 后20%高噪声)",
+      "snr_ratio": "两个尺度SNR的目标比例 (越大差异越大)"
+    },
+    
+    "low_snr_percentile": 0.2,
+    "high_snr_percentile": 0.8,
+    "snr_ratio": 2.0,
+    
+    "_comment_tuning": {
+      "condition_w建议": "0.5-1.0适合干净数据, 1.0-2.0适合噪声数据",
+      "snr_ratio建议": "1.5-3.0, 越大两个尺度差异越大"
+    }
+  },
+  "train": {
+    "epochs": 100,
+    "batch_size": 16,
+    "lr": 1e-3
+  }
+}

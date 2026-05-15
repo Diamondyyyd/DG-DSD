@@ -1,0 +1,52 @@
+
+#type: args
+
+train:
+  epochs: 100
+  batch_size: 12
+ 
+  lr: 1.0e-4
+
+diffusion:
+  layers: 4 
+  channels: 64 
+  nheads: 8
+  diffusion_embedding_dim: 128
+  side_dim: 25                     
+  beta_start: 0.0001
+  beta_end: 0.5
+  num_steps: 50
+  schedule: "quad"
+
+  use_improved_transformers: true    
+  temporal_scales: [1, 2, 4]       
+  sparsity_ratio: 0.1               
+  use_memory_efficient: true
+  
+  # 🔥 双尺度范数引导配置 (来自 DiffusionAD)
+  use_dual_scale: true              # 启用双尺度
+  less_t_range: 15                  # normal_t 范围 [0, 15)
+  noisier_t_range: 50               # noisier_t 范围 [15, 50)
+  condition_w: 1.0                  # 范数引导权重        
+
+  # 🔥🔥 频率增强去噪网络配置（新增）
+  # 设置为 true 启用频率增强，设置为 false 使用标准时域去噪网络
+  use_freq_enhancement: true        # 启用频率增强去噪网络
+  n_fft: 32                         # STFT窗口大小（建议：序列长度的1/3到1/5）
+  hop_length: 8                     # STFT跳跃步长（建议：n_fft/4）
+  stable_freq_ratio: 0.3            # 稳定频率选择比例（0.2-0.5，越小越保守）
+  num_freq_transformer_layers: 2    # 稳定频率编码器（Transformer）层数
+  num_freq_tcn_layers: 3            # 变化频率编码器（ModernTCN）层数
+  freq_fusion_type: "gated"         # 双分支融合类型: "gated"(推荐), "attention", "add"
+
+model:
+  is_unconditional: 0
+  timeemb: 128
+  featureemb: 16
+  timestamp_emb_dim: 16            
+  target_strategy: "random"
+ 
+  use_anomaly_aware: true         
+  anomaly_enhancement_strength: 0.1 
+  gate_fusion_strength: 0.8       
+  skip_norm_enabled: true          
